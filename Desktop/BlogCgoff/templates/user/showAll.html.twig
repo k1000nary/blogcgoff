@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+{% block title %}Tous les articles{% endblock %}
+{% block meta %}
+
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9">
+                {% for article in articles %}
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <h2>{{ article.titre }}</h2>
+                            <small>
+                                Crée le {{ article.date | date('d-m-Y à H:i') }}
+                                {% if article.dateEdition %}  | Modifié le {{ article.dateEdition | date('d-m-Y à H:i') }} {% endif %}
+                            </small>
+                            <p>{{ article.contenu | slice(0,200) | raw }}</p>
+                        </div>
+                        <div class="col-sm-4">
+                            <img src="{{ asset('uploads/' ~ article.image.url) }}" alt="{{ article.titre }}" class="img-fluid p-5">
+                            <a href="{{ path('user_post_edit', {'id': article.id}) }}" class="btn btn-secondary">Modifier</a>
+                            <a href="{{ path('user_post_delete', {'id': article.id}) }}" class="btn btn-secondary">Supprimer</a>
+                        </div>
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+            <div class="col-sm-3">
+                <a href="{{ path('user_post_new') }}" class="btn btn-primary">Rédiger un article</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

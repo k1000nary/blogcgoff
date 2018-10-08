@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% block title %}Voir article{% endblock %}
+{% block meta %}
+
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-8">
+            <h1>{{ article.titre }}</h1>
+            <p>
+                {% if article.categories.count > 0 %}
+                    Catégories :
+                    <strong>
+                        {% for categorie in article.categories %}
+                                <span class="badge badge-pill badge-dark">{{ categorie.nom | capitalize}}</span>
+                            {% if not loop.last %}    {% endif %}
+                        {% endfor %}
+                    </strong>
+                {% endif %}
+            </p>
+            <blockquote class="blockquote">
+                <footer class="blockquote-footer">
+                    Posté le <cite title="Source Title">{{ article.date | date('d-M-Y') }}</cite>
+                    à <cite title="Source Title">{{ article.date | date('H:i') }}</cite>
+                    par <cite title="Source Title">{{ article.auteur }}</cite>
+                </footer>
+
+                <p class="mb-0">{{ article.contenu | raw }}</p>
+            </blockquote>
+            {#
+            <p>
+                {% if article.tags.count > 0 %}
+                    Etiquettes :
+                    <strong>
+                        {% for tag in article.tags %}
+                            <span class="badge badge-pill badge-info">{{ tag.name | capitalize}}</span>
+                            {% if not loop.last %}   {% endif %}
+                        {% endfor %}
+                    </strong>
+                {% endif %}
+            </p>
+            #}
+            <h3>Commentaires <span class="badge badge-info badge-pill">{{ article.commentaires | length }}</span></h3>
+            <br>
+        </div>
+        <div class="col-sm-4">
+            <fieldset>
+                <strong>Méta description ( {{ article.description | length }} caractères )</strong>
+                <textarea class="m-4" id="" cols="40" rows="10">{{ article.description }}</textarea>
+            </fieldset>
+            <strong>Image de mise en avant</strong>
+            <img src="{{ asset('uploads/' ~ article.image.url) }}" alt="{{ article.titre }}" class="img-fluid p-4">
+            <fieldset>
+                <strong>Text alternatif de l'image</strong>
+                <textarea class="m-4" id="" cols="40" rows="5">{{ article.image.textAlternatif }}</textarea>
+            </fieldset>
+            <a href="{{ path('user_post_edit', {'id': article.id}) }}" class="btn btn-secondary">Modifier</a>
+            <a href="{{ path('user_post_delete', {'id': article.id}) }}" class="btn btn-secondary">Supprimer</a>
+        </div>
+    </div>
+{% endblock %}

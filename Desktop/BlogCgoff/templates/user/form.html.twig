@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block title %}Formulaire{% endblock %}
+{% block meta %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8">
+                {{ form_start(form) }}
+                {{ form_row(form.titre, {'label':'Titre de l\'article', 'attr':{'class':'mt-2'}}) }}
+                {{ form_row(form.contenu, {'label':'Contenu de l\'article', 'attr':{'class':'ckeditor mt-2'}}) }}
+                <div class="row">
+                    <div class="col-6">
+                    </div>
+                    <div class="col-6">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                {{ form_row(form.image, {'label':'Image de mise en avant', 'attr':{'class':'mt-2'}}) }}
+                {{ form_row(form.publication, {'label':'Publier l\'article?', 'attr':{'class':'mt-2'}}) }}
+                {{ form_row(form.categories, {'label':'Catégorie(s) de l\'article', 'attr':{'class':'mt-2'}}) }}
+                {{ form_row(form.description, {'label':'Description de l\'article', 'attr':{'class':'mt-2'}}) }}
+                {{ form_row(form.auteur, {'label':'Rédacteur', 'attr':{'class':'mt-2'}}) }}
+                {% if editMode %}
+                    <input type="submit" value="Mettre à jour" class="btn btn-primary mt-lg-3">
+                {% else %}
+                    <input type="submit" value="Publier" class="btn btn-primary mt-lg-3">
+                {% endif %}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ article.titre }}{% endblock %}
+{% block meta %}
+<base href="http://127.0.0.1:8000/blog/{{ article.slug }}" />
+        <meta name="keywords" content="{% for categorie in article.categories %}{{ categorie.nom | capitalize}}{% if not loop.last %} ,{% endif %}{% endfor %}" />
+        <meta name="x-ua-compatible" content="IE=edge,chrome=1" />
+        <meta name="description" content="{{ article.description }}" />
+        <meta property="og:title" content="{{ article.titre }}">
+        <meta property="og:type" content="article">
+        <meta property="og:url" content="http://127.0.0.1:8000/blog/{{ article.slug }}">
+        <meta property="og:image" content="http://127.0.0.1:8000{{ asset('uploads/' ~ article.image.url) }}">
+        <meta property="og:description" content="{{ article.description }}">
+        <meta property="og:video" content="">
+        <meta property="og:locale" content="fr_FR">
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="http://127.0.0.1:8000/blog/{{ article.slug }}" />
+        <meta name="twitter:title" content="{{ article.titre }}" />
+        <meta property="twitter:description" content="{{ article.description }}" />
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-8">
+            <h1>{{ article.titre }}</h1>
+            <p>
+                {% if article.categories.count > 0 %}
+                    Catégories :
+                    <strong>
+                        {% for categorie in article.categories %}
+                            <a href="{{ path('show_cat', {'nom':categorie.nom}) }}">
+                                <span class="badge badge-pill badge-dark">{{ categorie.nom | capitalize}}</span>
+                            </a>
+                            {% if not loop.last %}    {% endif %}
+                        {% endfor %}
+                    </strong>
+                {% endif %}
+            </p>
+            <blockquote class="blockquote">
+                <footer class="blockquote-footer">
+                    Posté le <cite title="Source Title">{{ article.date | date('d-M-Y') }}</cite>
+                    à <cite title="Source Title">{{ article.date | date('H:i') }}</cite>
+                    par <cite title="Source Title">{{ article.auteur }}</cite>
+                </footer>
+                <img src="{{ asset('uploads/' ~ article.image.url) }}" alt="{{ article.titre }}" class="img-fluid p-4">
+                <p class="mb-0">{{ article.contenu | raw }}</p>
+            </blockquote>
+            {#
+            <p>
+                {% if article.tags.count > 0 %}
+                    Etiquettes :
+                    <strong>
+                        {% for tag in article.tags %}
+                            <span class="badge badge-pill badge-info">{{ tag.name | capitalize}}</span>
+                            {% if not loop.last %}   {% endif %}
+                        {% endfor %}
+                    </strong>
+                {% endif %}
+            </p>
+            #}
+            <h3>Commentaires <span class="badge badge-info badge-pill">{{ article.commentaires | length }}</span></h3>
+            <br>
+            <section class="commentaire">
+                {% for comment in article.commentaires %}
+                    {% if comment.publication %}
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <small><em>
+                                        De {{ comment.auteur }} le
+                                        {{ comment.date | date('d/m/Y à H:i') }}
+                                    </em></small>
+                            </div>
+                            <div class="col-sm-9">
+                                {{ comment.contenu | raw }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <hr>
+                {% endfor %}
+                <h3>Laisser un commentaire</h3>
+                <br>
+                {{ form_start(formComment) }}
+                {{ form_label (formComment.auteur, "Nom") }}
+                {{ form_widget(formComment.auteur,{'attr':{'placeholder':"Votre nom"}}) }}
+                {{ form_label (formComment.contenu, "Commentaire") }}
+                {{ form_widget(formComment.contenu,{'attr':{'placeholder':"Votre commentaire"}}) }}
+                <br>
+                <input type="submit" value="Publier le commentaire" class="btn btn-info">
+                {{ form_end(formComment) }}
+            </section>
+        </div>
+        <div class="col-sm-4">
+            <h4>Liste des catégories</h4>
+            <br>
+            <ul class="list-group">
+                {% for category in cat %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{{ path('show_cat',{'nom':category.nom}) }}">{{ category.nom }}</a>
+                        <span class="badge badge-primary badge-pill">{{ category.article | length }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
